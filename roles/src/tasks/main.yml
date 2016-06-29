@@ -1,0 +1,56 @@
+---
+- name: Make sure .ssh directory exists
+  file:
+    path: ~/.ssh
+    state: directory
+
+- name: Upload the private key used for Github cloning
+  copy:
+    src: "{{ app_deploy_key }}"
+    dest: ~/.ssh/
+
+- name: Correct SSH deploy key permissions
+  file:
+    dest: ~/.ssh/{{ app_deploy_key }}
+    mode: 0600
+
+- name: Add user to www-data
+  user:
+    name: "{{ ansible_ssh_user }}"
+    group: www-data
+  become: yes
+
+- name: Change group of srv
+  command: chgrp www-data .
+  args:
+    chdir: /srv
+  become: yes
+
+- name: Change /srv/ permissions
+  command: chmod -R 0775 .
+  args:
+    chdir: /srv
+  become: yes
+
+- name: Clone git repos
+  git:
+    repo: "{{ item.repo }}"
+    dest: /srv/{{ item.name }}
+    accept_hostkey: true
+    key_file: /home/{{ ansible_ssh_user }}/.ssh/{{ app_deploy_key }}
+    force: yes
+  with_items: "{{ sites }}"
+
+- name: Npm install
+  command: sudo -iu {{ nvm.user }} sh -c 'cd /srv/{{ item.name }}; npm install'
+  args:
+    chdir: /srv/{{ item.name }}
+  with_items: "{{ sites }}"
+  when: item.npm is defined
+
+- name: Run command
+  command: sudo -iu {{ nvm.user }} sh -c 'cd /srv/{{ item.name }}; {{ item.cmd }}'
+  args:
+    chdir:
+  with_items: "{{ sites }}"
+  when: item.cmd is defined

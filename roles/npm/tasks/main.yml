@@ -1,0 +1,12 @@
+---
+- name: Install roots
+  command: sudo -iu {{ nvm.user }} npm install -g roots --silent
+  args:
+    creates: /home/{{ ansible_ssh_user }}/.nvm/versions/node/{{ nvm.node_version }}/bin/roots
+  ignore_errors: yes
+
+- name: Install coffeescript
+  command: sudo -iu {{ nvm.user }} npm install -g coffee-script --silent
+  args:
+    creates: /home/{{ ansible_ssh_user }}/.nvm/versions/node/{{ nvm.node_version }}/bin/coffee
+  ignore_errors: yes

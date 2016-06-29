@@ -1,0 +1,17 @@
+---
+- name: Static server setup
+  hosts: all
+  gather_facts: no
+  vars_files:
+    - vars.yml
+  roles:
+    - role: bootstrap_xenial
+      tags: bootstrap
+    - role: common
+      tags: common
+    - role: npm
+      tags: npm
+    - role: nginx
+      tags: nginx
+    - role: src
+      tags: src

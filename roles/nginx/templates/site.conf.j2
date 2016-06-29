@@ -1,0 +1,12 @@
+server {
+    listen 80;
+    server_name {{ item.domain_name }}{% if vm is defined %}.local{% endif %};
+
+    index index.html index.htm;
+
+    root /srv/{{ item.name }}/{{ item.public | default() }};
+
+    location / {
+            try_files $uri $uri/ =404;
+    }
+}

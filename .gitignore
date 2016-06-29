@@ -1,0 +1,15 @@
+# Ignore Vagrant metadata
+.vagrant
+
+# Ansible retry filesss
+*.retry
+
+# Ansible logs
+**/*.log
+
+# Ansible deploy keys
+files/pluginstatic
+files/pluginstatic.pub
+
+# Ansible inventories
+hosts

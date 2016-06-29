@@ -1,0 +1,41 @@
+---
+apt_packages:
+  - build-essential
+  - git-core        # For git cloning
+  - ntp
+  - htop
+
+nvm.user: "{{ ansible_ssh_user }}"
+nvm.node_version: v6.2.2
+
+npm_packages:
+  - coffee-script
+
+motd_file: motd
+app_deploy_key: pluginstatic
+
+sites:
+  - name: roboteam
+    domain_name: roboteam.mitchgu.com
+    repo: git@github.mit.edu:mitchgu/roboteam.git
+    public: public
+    npm: yes
+    cmd: roots compile -e production
+  - name: slamstruder_docs
+    domain_name: slamstruder.mitchgu.com
+    repo: git@github.com:mitchgu/SLAMStruder-docs.git
+    public: build
+    npm: yes
+    cmd: coffee scripts/build.coffee
+  - name: mitchgu
+    domain_name: mitchgu.com
+    repo: git@github.com:mitchgu/mitchgu.com.git
+  - name: minemmo
+    domain_name: minemmo.mitchgu.com
+    repo: git@github.mit.edu:mitchgu/6.005-minesweeper-web-client.git
+    public: public
+    npm: yes
+    cmd: roots compile -e production
+  - name: cvduffytothemax
+    domain_name: cvduffytothemax.com
+    repo: git@github.com:mitchgu/cvduffytothemax.git
